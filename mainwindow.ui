@@ -100,7 +100,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox_2">
+       <widget class="QComboBox" name="modeComboBox">
         <item>
          <property name="text">
           <string>Normal</string>
@@ -131,7 +131,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox_3">
+       <widget class="QComboBox" name="typeComboBox">
         <item>
          <property name="text">
           <string>Standard</string>
@@ -152,7 +152,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox_4">
+       <widget class="QComboBox" name="speedComboBox">
         <item>
          <property name="text">
           <string>5K</string>
@@ -302,7 +302,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="sendButton">
         <property name="text">
          <string>Send</string>
         </property>
@@ -391,7 +391,47 @@
        <height>451</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout"/>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QTreeWidget" name="messageTeeWidget">
+        <column>
+         <property name="text">
+          <string>Timestamp</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Direction</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Type</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>ID</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>RTR</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>DLC</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Data</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
   </widget>

@@ -20,6 +20,8 @@ private slots:
 
     void on_remoteCheckBox_clicked();
 
+    void on_sendButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     void updateSerialPorts();
