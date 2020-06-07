@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>965</width>
-    <height>553</height>
+    <width>1071</width>
+    <height>687</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,6 +68,330 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>10</y>
+      <width>571</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>CAN Configuration</string>
+    </property>
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>551</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Mode: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_2">
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Loopback</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Silent</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Loopback Silent</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Type:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_3">
+        <item>
+         <property name="text">
+          <string>Standard</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Extended</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Speed (bps): </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_4">
+        <item>
+         <property name="text">
+          <string>5K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>10K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>20K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>50K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>100K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>125K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>200K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>250K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>400K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>500K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>800K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>1M</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>90</y>
+      <width>711</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Send Message</string>
+    </property>
+    <widget class="QWidget" name="horizontalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>681</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>ID: 0x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_2">
+        <property name="maximumSize">
+         <size>
+          <width>90</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>FF FF FF FF</string>
+        </property>
+        <property name="maxLength">
+         <number>12</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="remoteCheckBox">
+        <property name="text">
+         <string>Remote</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Data: 0x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="dataTextBox">
+        <property name="text">
+         <string>AA BB CC DD EE FF 00 11</string>
+        </property>
+        <property name="maxLength">
+         <number>24</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string>20-byte Packet</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>Send</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>331</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Message ID Mask/Filter</string>
+    </property>
+    <widget class="QWidget" name="horizontalLayoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>311</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Mask: 0x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_3">
+        <property name="text">
+         <string>FF FF FF FF</string>
+        </property>
+        <property name="maxLength">
+         <number>12</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Filter: 0x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_4">
+        <property name="text">
+         <string>FF FF FF FF</string>
+        </property>
+        <property name="maxLength">
+         <number>12</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>180</y>
+      <width>1051</width>
+      <height>491</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Messages</string>
+    </property>
+    <widget class="QWidget" name="gridLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>1031</width>
+       <height>451</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout"/>
     </widget>
    </widget>
   </widget>

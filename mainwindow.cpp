@@ -30,3 +30,10 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_remoteCheckBox_clicked()
+{
+    //! \remark Data field is not allowed during RTR (Remote Transmission Request)
+    bool _isChecked =(ui->remoteCheckBox->checkState() == Qt::Checked);
+    ui->dataTextBox->setEnabled(!_isChecked);
+}
