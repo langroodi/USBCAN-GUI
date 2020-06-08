@@ -50,7 +50,7 @@ void MainWindow::on_sendButton_clicked()
     QString _text(_hexArr);
     QMessageBox msgBox;
     msgBox.setText(_text);
-    msgBox.exec();
+    //msgBox.exec();
 
     QByteArray ba;
     ba.resize(5);
@@ -64,7 +64,19 @@ void MainWindow::on_sendButton_clicked()
 
     ba.resize(6);
     ba[5] = checksum;
-       _text = ba.toHex().toUpper();
+    _text = ba.toHex().toUpper();
+    msgBox.setText(_text);
+    //msgBox.exec();
+
+    QString _filter = ui->filterTextBox->text();
+    auto _id = CanHelper::IdToArray(_filter);
+    _text = _id.toHex().toUpper();
     msgBox.setText(_text);
     msgBox.exec();
+}
+
+
+void MainWindow::on_startButton_clicked()
+{
+    ui->sendGroupBox->setEnabled(true);
 }

@@ -22,6 +22,8 @@ private slots:
 
     void on_sendButton_clicked();
 
+    void on_startButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     void updateSerialPorts();

@@ -27,11 +27,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    canhelper.cpp
+    canhelper.cpp \
+    canframe.cpp
 
 HEADERS += \
         mainwindow.h \
-    canhelper.h
+    canhelper.h \
+    canframe.h
 
 FORMS += \
         mainwindow.ui
