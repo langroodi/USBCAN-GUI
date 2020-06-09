@@ -21,6 +21,79 @@ QByteArray CanHelper::IdToArray(QString id)
     return _result;
 }
 
+QByteArray CanHelper::IdToArray(unsigned int id, bool isExtended)
+{
+    QByteArray _result;
+
+    //! \todo std::move
+
+    int _arraySize;
+    if (isExtended)
+    {
+        _arraySize = EXTENDED_ID_SIZE;
+    }
+    else
+    {
+        _arraySize = STANDARD_ID_SIZE;
+    }
+
+    for (int i = 0; i < _arraySize; i++)
+    {
+        int _pointer = i * 8;
+        unsigned char _byte = (unsigned char)(id >> _pointer);
+        _result.append(_byte);
+    }
+
+    return _result;
+}
+
+unsigned int CanHelper::ArrayToId(const QByteArray idArray,
+                                  const bool isExtended)
+{
+    unsigned int _result = 0;
+
+    int _endItr;
+    if (isExtended)
+    {
+        _endItr = EXTENDED_ID_SIZE + PACKET_CRC_OFFSET;
+    }
+    else
+    {
+        _endItr = STANDARD_ID_SIZE + PACKET_CRC_OFFSET;
+    }
+
+    for (int i = PACKET_CRC_OFFSET; i < _endItr; i++)
+    {
+        int _pointer = i * 8;
+        unsigned int _decimal = (unsigned int)(idArray[i] << _pointer);
+        _result |= _decimal;
+    }
+
+    return _result;
+}
+
+QByteArray CanHelper::ArrayToData(
+        const QByteArray array,
+        const bool isExtended)
+{
+    QByteArray _result;
+
+    int _begin;
+    if (isExtended)
+    {
+        _begin = EXTENDED_ID_SIZE + PACKET_CRC_OFFSET;
+    }
+    else
+    {
+        _begin = STANDARD_ID_SIZE + PACKET_CRC_OFFSET;
+    }
+    int  _length = array.count() - _begin - 1;
+
+    _result = array.mid(_begin, _length);
+
+    return _result;
+}
+
 unsigned char CanHelper::GetChecksum(QByteArray array, int offset)
 {
     int sum = 0;
@@ -35,46 +108,42 @@ unsigned char CanHelper::GetChecksum(QByteArray array, int offset)
 }
 
 QByteArray CanHelper::GetConfigPacket(
-        unsigned char speed, unsigned char frame, int filter, int mask, unsigned char mode)
+        unsigned char speed,
+        unsigned char frame,
+        QByteArray filter,
+        QByteArray mask,
+        unsigned char mode)
 {
     QByteArray _result;
-    _result.resize(CONFIG_PACKET_LENGTH);
 
     const unsigned char CONFIG_TYPE = 0x12;
     const unsigned char CONFIG_RESERVED = 0x01;
     const unsigned char CONFIG_ZERO = 0x00;
 
-    int pointer = 0;
     // Header
-    _result[pointer++] = PACKET_HEADER_MSB;
-    _result[pointer++] = PACKET_HEADER_LSB;
-    _result[pointer++] = CONFIG_TYPE;
+    _result.append(PACKET_HEADER_MSB);
+    _result.append(PACKET_HEADER_LSB);
+    _result.append(CONFIG_TYPE);
 
-    _result[pointer++] = speed;
-    _result[pointer++] = frame;
+    _result.append(speed);
+    _result.append(frame);
 
     // Filter
-    _result[pointer++] = CONFIG_TYPE;
-    _result[pointer++] = CONFIG_TYPE;
-    _result[pointer++] = CONFIG_TYPE;
-    _result[pointer++] = CONFIG_TYPE;
+    _result.append(filter);
 
     // Mask
-    _result[pointer++] = CONFIG_TYPE;
-    _result[pointer++] = CONFIG_TYPE;
-    _result[pointer++] = CONFIG_TYPE;
-    _result[pointer++] = CONFIG_TYPE;
+    _result.append(mask);
 
-    _result[pointer++] = mode;
-    _result[pointer++] = CONFIG_RESERVED;
-    _result[pointer++] = CONFIG_ZERO;
-    _result[pointer++] = CONFIG_ZERO;
-    _result[pointer++] = CONFIG_ZERO;
-    _result[pointer++] = PACKET_RESERVED_BYTE;
+    _result.append(mode);
+    _result.append(CONFIG_RESERVED);
+    _result.append(CONFIG_ZERO);
+    _result.append(CONFIG_ZERO);
+    _result.append(CONFIG_ZERO);
+    _result.append(CONFIG_ZERO);
 
     // CRC
     unsigned char _crc = GetChecksum(_result, PACKET_CRC_OFFSET);
-    _result[pointer++] = _crc;
+    _result.append(_crc);
 
     return _result;
 }

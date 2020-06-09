@@ -17,33 +17,34 @@
 #define EXTENDED_MESSAGE_BYTE 0x20
 //! \def Remote Message Byte
 #define REMOTE_MESSAGE_BYTE 0x10
-//! \def Standard Message Minimum Size
-#define STANDARD_MESSAGE_SIZE 5
-//! \def Extended Message Minimum Size
-#define EXTENDED_MESSAGE_SIZE 7
 
 //! \class CAN Message Frame
 class CanFrame
 {
-//! \private
+    //! \private
 private:
     bool isExtended; //!< Is Extended
     bool isRtr; //!< Is RTR
-    int dlc; //!< DLC
+    unsigned char dlc; //!< DLC
+    unsigned int id; //!< Message ID
     QByteArray data; //!< Data Frame
-    int frameSize; //!< Message Frame Size
 
-//! \public
+    //! \public
 public:
     CanFrame(
             const bool isExtended /*!< [in] Is extended or standard */,
             const bool isRtr /*!< [in] Is RTR or not */,
+            const unsigned int id /*!< [in] Message ID */,
             const QByteArray data /*!< [in] Data frame */); //!< Constructor
-    bool IsExtended(); //!< Is Extended
-    bool IsRtr(); //!< Is Remote Transmission Request (RTR)
-    int Dlc(); //< Data Length Code (DLC)
-    QByteArray Data(); //!< Data Frame
+    bool IsExtended(); //!< Get Is Extended
+    bool IsRtr(); //!< Get Is Remote Transmission Request (RTR)
+    unsigned char Dlc(); //!< Get Data Length Code (DLC)
+    unsigned int Id(); //!< Get Message ID
+    QByteArray Data(); //!< Get Data Frame
     QByteArray Serialize(); //!< Serialize the CAN Frame instance
+    static bool Deserialize(
+            CanFrame *canFrame /*!< [out] CAN Frame */,
+            QByteArray array /*!< [in] Message Array */); //!< Deserialize message array
 };
 
 #endif // CANFRAME_H

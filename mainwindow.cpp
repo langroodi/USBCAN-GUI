@@ -72,7 +72,19 @@ void MainWindow::on_sendButton_clicked()
     auto _id = CanHelper::IdToArray(_filter);
     _text = _id.toHex().toUpper();
     msgBox.setText(_text);
-    msgBox.exec();
+    //msgBox.exec();
+
+    unsigned int _sampleId = 19088743;
+    auto _sampleArray = CanHelper::IdToArray(_sampleId, true);
+    unsigned int _recoveredId = CanHelper::ArrayToId(_sampleArray, true);
+
+    if (_sampleId == _recoveredId)
+    {
+        auto _sampleHex = _sampleArray.toHex().toUpper();
+        QString _sampleText(_sampleHex);
+        msgBox.setText(_sampleText);
+        msgBox.exec();
+    }
 }
 
 

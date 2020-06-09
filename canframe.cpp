@@ -4,22 +4,14 @@
 CanFrame::CanFrame(
         const bool isExtended /*!< [in] Is extended or standard */,
         const bool isRtr /*!< [in] Is RTR or not */,
+        const unsigned int id /*!< [in] Message ID */,
         const QByteArray data /*!< [in] Data frame */)
 {
     this->isExtended = isExtended;
     this->isRtr = isRtr;
+    this->id = id;
+    this->dlc = (unsigned char)data.count();
     this->data = data;
-
-    dlc = data.count();
-
-    if (isExtended)
-    {
-        frameSize = EXTENDED_MESSAGE_SIZE + dlc;
-    }
-    else
-    {
-        frameSize = STANDARD_MESSAGE_SIZE + dlc;
-    }
 } //!< Constructor
 
 bool CanFrame::IsExtended()
@@ -31,7 +23,12 @@ bool CanFrame::IsRtr()
     return isRtr;
 } //!< Is Remote Transmission Request (RTR)
 
-int CanFrame::Dlc()
+unsigned int CanFrame::Id()
+{
+    return id;
+} //!< Message ID
+
+unsigned char CanFrame::Dlc()
 {
     return dlc;
 } //< Data Length Code (DLC)
@@ -44,11 +41,9 @@ QByteArray CanFrame::Data()
 QByteArray CanFrame::Serialize()
 {
     QByteArray _result;
-    _result.resize(frameSize);
 
-    int _pointer = 0;
     // Header
-    _result[_pointer++] = MESSAGE_HEADER_BYTE;
+    _result.append(MESSAGE_HEADER_BYTE);
 
     // Type
     unsigned char _type = MESSAGE_TYPE_BYTE;
@@ -60,13 +55,46 @@ QByteArray CanFrame::Serialize()
     {
         _type |= REMOTE_MESSAGE_BYTE;
     }
-    unsigned char _dlcByte = (unsigned char)dlc;
+
     _type |= dlc;
-    _result[_pointer++] = _type;
+    _result.append(_type);
 
-    //! \todo ADD ID PLEASE
+    // ID
+    QByteArray _idArray = CanHelper::IdToArray(id, isExtended);
+    _result.append(_idArray);
 
-    _result[_pointer++] = MESSAGE_HEADER_BYTE;
-    _result[_pointer++] = MESSAGE_HEADER_BYTE;
+    // Data
+    _result.append(data);
 
+    // Trailer
+    _result.append(MESSAGE_TRAILER_BYTE);
+
+    return _result;
 } //!< Serialize the CAN Frame instance
+
+static bool Deserialize(
+        CanFrame *canFrame /*!< [out] CAN Frame */,
+        QByteArray array /*!< [in] Message Array */)
+{
+    bool _result = true;
+
+    if ((array[0] == MESSAGE_HEADER_BYTE) &&
+        ((array[1] & MESSAGE_TYPE_BYTE) == MESSAGE_TYPE_BYTE) &&
+        (array[array.count() - 1] == MESSAGE_TRAILER_BYTE))
+    {
+        bool _isExtended =
+                (array[1] & EXTENDED_MESSAGE_BYTE) == EXTENDED_MESSAGE_BYTE;
+        bool _isRtr =
+                (array[1] & REMOTE_MESSAGE_BYTE) == REMOTE_MESSAGE_BYTE;
+        unsigned int _id = CanHelper::ArrayToId(array, _isExtended);
+        QByteArray _data =  CanHelper::ArrayToData(array, _isExtended);
+
+        canFrame = new CanFrame(_isExtended, _isRtr, _id, _data);
+    }
+    else
+    {
+        _result = false;
+    }
+
+    return _result;
+} //!< Deserialize message array
