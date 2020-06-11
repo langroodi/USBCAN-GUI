@@ -147,3 +147,16 @@ QByteArray CanHelper::GetConfigPacket(
 
     return _result;
 }
+
+QString CanHelper::GetSplittedHex(const QString hexString)
+{
+    int _count = hexString.count();
+    QString _result = hexString;
+
+    int _offset = 0;
+    for(int i = 2; i < _count; i+= 2){
+        _result.insert(i + _offset++, ' ');
+    }
+
+    return _result;
+}

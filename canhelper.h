@@ -22,6 +22,7 @@ public:
     static QByteArray ArrayToData(const QByteArray array, const bool isExtended);
     static unsigned char GetChecksum(QByteArray array, int offset = 0);
     static QByteArray GetConfigPacket(unsigned char speed, unsigned char frame, QByteArray filter, QByteArray mask, unsigned char mode);
+    static QString GetSplittedHex(const QString hexString);
 };
 
 #endif // CANHELPER_H

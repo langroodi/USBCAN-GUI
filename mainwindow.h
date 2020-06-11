@@ -2,6 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTime>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QMessageBox>
+#include "canframe.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +32,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void updateSerialPorts();
+    void addMessage(CanFrame canFrame, bool isIncoming);
 };
 
 #endif // MAINWINDOW_H

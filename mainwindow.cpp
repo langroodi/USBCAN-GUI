@@ -1,9 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "canhelper.h"
-#include <QSerialPort>
-#include <QSerialPortInfo>
-#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -76,7 +72,7 @@ void MainWindow::on_sendButton_clicked()
 
     unsigned int _sampleId = 19088743;
     auto _sampleArray = CanHelper::IdToArray(_sampleId, true);
-    unsigned int _recoveredId = CanHelper::ArrayToId(_sampleArray, true);
+    /*unsigned int _recoveredId = CanHelper::ArrayToId(_sampleArray, true);
 
     if (_sampleId == _recoveredId)
     {
@@ -84,11 +80,54 @@ void MainWindow::on_sendButton_clicked()
         QString _sampleText(_sampleHex);
         msgBox.setText(_sampleText);
         msgBox.exec();
-    }
-}
+    }*/
 
+    CanFrame *_frame = new CanFrame(false, false, 10, ba);
+    addMessage(*_frame, true);
+    delete _frame;
+}
 
 void MainWindow::on_startButton_clicked()
 {
     ui->sendGroupBox->setEnabled(true);
+}
+
+void MainWindow::addMessage(CanFrame canFrame, bool isIncoming)
+{
+    //! \todo STD Move
+
+    QTreeWidgetItem *_item = new QTreeWidgetItem(ui->messageTreeWidget);
+    int _index = 0;
+
+    //! \remark Timestamp
+    QString _time = QTime::currentTime().toString("hh:mm:ss");
+    _item->setText(_index++, _time);
+
+    //! \remark Direction
+    QString _direction = isIncoming ? "Incoming" : "Outgoing";
+    _item->setText(_index++, _direction);
+
+    //! \remark Type
+    QString _type = canFrame.IsExtended() ? "Yes" : "No";
+    _item->setText(_index++, _type);
+
+    //! \remark ID
+    unsigned int _id = canFrame.Id();
+    QString _idStr = QString::number(_id);
+    _item->setText(_index++, _idStr);
+
+    //! \remark RTR
+    QString _rtr = canFrame.IsRtr() ? "Yes" : "No";
+    _item->setText(_index++, _rtr);
+
+    //! \remark DLC
+    QString _dlc = QString::number(canFrame.Dlc());
+    _item->setText(_index++, _dlc);
+
+    //! \remark Data
+    QString _data = canFrame.Data().toHex().toUpper();
+    _data = CanHelper::GetSplittedHex(_data);
+    _item->setText(_index++, _data);
+
+    ui->messageTreeWidget->addTopLevelItem(_item);
 }
