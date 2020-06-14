@@ -7,6 +7,7 @@
 #include <QSerialPortInfo>
 #include <QMessageBox>
 #include "canframe.h"
+#include "serialhelper.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,7 +33,11 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void updateSerialPorts();
-    void addMessage(CanFrame canFrame, bool isIncoming);
+    void addMessage(CanFrame *canFrame, bool isIncoming);
+    QSerialPort serialPort;
+    SerialHelper *serialHelper;
+    static void readReadyCallback(QByteArray data);
+    static void writeDoneCallback(qint64 data);
 };
 
 #endif // MAINWINDOW_H

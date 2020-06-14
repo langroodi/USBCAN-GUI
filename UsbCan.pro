@@ -28,12 +28,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     canhelper.cpp \
-    canframe.cpp
+    canframe.cpp \
+    serialhelper.cpp
 
 HEADERS += \
         mainwindow.h \
     canhelper.h \
-    canframe.h
+    canframe.h \
+    serialhelper.h
 
 FORMS += \
         mainwindow.ui

@@ -72,7 +72,7 @@ QByteArray CanFrame::Serialize()
     return _result;
 } //!< Serialize the CAN Frame instance
 
-static bool Deserialize(
+bool CanFrame::Deserialize(
         CanFrame *canFrame /*!< [out] CAN Frame */,
         QByteArray array /*!< [in] Message Array */)
 {
