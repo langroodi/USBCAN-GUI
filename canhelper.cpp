@@ -64,7 +64,7 @@ unsigned int CanHelper::ArrayToId(const QByteArray idArray,
 
     for (int i = PACKET_CRC_OFFSET; i < _endItr; i++)
     {
-        int _pointer = i * 8;
+        int _pointer = (i - PACKET_CRC_OFFSET) * 8;
         unsigned int _decimal = (unsigned int)(idArray[i] << _pointer);
         _result |= _decimal;
     }

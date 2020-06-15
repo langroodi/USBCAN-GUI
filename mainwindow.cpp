@@ -15,6 +15,23 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::on_pushButton_clicked()
 {
     updateSerialPorts();
+
+    QByteArray _ba(6, 0);
+    _ba[0] = 0xAAU;
+    _ba[1] = 0xC1U;
+    _ba[2] = 0x00U;
+    _ba[3] = 0x00U;
+    _ba[4] = 0x41U;
+    _ba[5] = 0x55U;
+
+    CanFrame *_frame;
+    CanFrame::Deserialize(_frame, _ba);
+
+    QMessageBox _msgBox;
+    _msgBox.setText(QString::number(_frame->Id()));
+    _msgBox.exec();
+    //addMessage(_frame, true);
+    //delete _frame;
 }
 
 void MainWindow::updateSerialPorts()
@@ -164,11 +181,11 @@ void MainWindow::addMessage(CanFrame *canFrame, bool isIncoming)
 void MainWindow::readReadyCallback(QByteArray data)
 {
     QMessageBox _msgBox;
-    _msgBox.setText("Hey");
+    _msgBox.setText(CanHelper::GetSplittedHex(data.toHex().toUpper()));
     _msgBox.exec();
 
     CanFrame *_frame;
-    CanFrame::Deserialize(_frame, data);
+    CanFrame::Deserialize(_frame, data); //! \todo The used zero-copy pattern is buggy
 
     _msgBox.setText(QString::number(_frame->Id()));
     _msgBox.exec();
