@@ -72,15 +72,12 @@ QByteArray CanFrame::Serialize()
     return _result;
 } //!< Serialize the CAN Frame instance
 
-bool CanFrame::Deserialize(
-        CanFrame *canFrame /*!< [out] CAN Frame */,
+CanFrame CanFrame::Deserialize(
         QByteArray array /*!< [in] Message Array */)
 {
-    bool _result = true;
-
     if ((array[0] == MESSAGE_HEADER_BYTE) &&
-        ((array[1] & MESSAGE_TYPE_BYTE) == MESSAGE_TYPE_BYTE) &&
-        (array[array.count() - 1] == MESSAGE_TRAILER_BYTE))
+            ((array[1] & MESSAGE_TYPE_BYTE) == MESSAGE_TYPE_BYTE) &&
+            (array[array.count() - 1] == MESSAGE_TRAILER_BYTE))
     {
         bool _isExtended =
                 (array[1] & EXTENDED_MESSAGE_BYTE) == EXTENDED_MESSAGE_BYTE;
@@ -89,12 +86,7 @@ bool CanFrame::Deserialize(
         unsigned int _id = CanHelper::ArrayToId(array, _isExtended);
         QByteArray _data =  CanHelper::ArrayToData(array, _isExtended);
 
-        canFrame = new CanFrame(_isExtended, _isRtr, _id, _data);
+        CanFrame _result(_isExtended, _isRtr, _id, _data);
+        return _result;
     }
-    else
-    {
-        _result = false;
-    }
-
-    return _result;
 } //!< Deserialize message array

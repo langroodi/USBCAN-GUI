@@ -42,9 +42,7 @@ public:
     unsigned int Id(); //!< Get Message ID
     QByteArray Data(); //!< Get Data Frame
     QByteArray Serialize(); //!< Serialize the CAN Frame instance
-    static bool Deserialize(
-            CanFrame *canFrame /*!< [out] CAN Frame */,
-            QByteArray array /*!< [in] Message Array */); //!< Deserialize message array
+    static CanFrame Deserialize(QByteArray array /*!< [in] Message Array */); //!< Deserialize message array
 };
 
 #endif // CANFRAME_H

@@ -9,29 +9,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     updateSerialPorts();
     serialHelper =
-            new SerialHelper(&serialPort, readReadyCallback, writeDoneCallback);
+            new SerialHelper(
+                &serialPort, ui->messageTreeWidget, readReadyCallback);
 }
 
 void MainWindow::on_pushButton_clicked()
 {
     updateSerialPorts();
-
-    QByteArray _ba(6, 0);
-    _ba[0] = 0xAAU;
-    _ba[1] = 0xC1U;
-    _ba[2] = 0x00U;
-    _ba[3] = 0x00U;
-    _ba[4] = 0x41U;
-    _ba[5] = 0x55U;
-
-    CanFrame *_frame;
-    CanFrame::Deserialize(_frame, _ba);
-
-    QMessageBox _msgBox;
-    _msgBox.setText(QString::number(_frame->Id()));
-    _msgBox.exec();
-    //addMessage(_frame, true);
-    //delete _frame;
 }
 
 void MainWindow::updateSerialPorts()
@@ -67,18 +51,9 @@ void MainWindow::on_sendButton_clicked()
     CanFrame *_frame =  new CanFrame(_isExtended, _isRtr, _id, _data);
     QByteArray _serializedFrame =_frame->Serialize();
 
-    QMessageBox _msgBox;
-    _msgBox.setText(CanHelper::GetSplittedHex(_serializedFrame.toHex().toUpper()));
-    _msgBox.exec();
-
     serialHelper->Write(_serializedFrame);
 
-    QByteArray readData = serialPort.readAll();
-       while (serialPort.waitForReadyRead(5000))
-           readData.append(serialPort.readAll());
-
-       _msgBox.setText(CanHelper::GetSplittedHex(readData.toHex().toUpper()));
-      // _msgBox.exec();
+    addMessage(ui->messageTreeWidget, _frame, false);
 }
 
 void MainWindow::on_startButton_clicked()
@@ -118,10 +93,6 @@ void MainWindow::on_startButton_clicked()
                     CanHelper::GetConfigPacket(
                         _speed, _frame, _filter, _mask, _mode);
 
-            QMessageBox _msgBox;
-            _msgBox.setText(CanHelper::GetSplittedHex(_configPack.toHex().toUpper()));
-            _msgBox.exec();
-
             serialHelper->Write(_configPack);
 
             ui->startButton->setText("Stop");
@@ -138,11 +109,12 @@ void MainWindow::on_startButton_clicked()
     }
 }
 
-void MainWindow::addMessage(CanFrame *canFrame, bool isIncoming)
+void MainWindow::addMessage(
+        QTreeWidget *treeWidget, CanFrame *canFrame, bool isIncoming)
 {
     //! \todo STD Move
 
-    QTreeWidgetItem *_item = new QTreeWidgetItem(ui->messageTreeWidget);
+    QTreeWidgetItem *_item = new QTreeWidgetItem(treeWidget);
     int _index = 0;
 
     //! \remark Timestamp
@@ -175,27 +147,11 @@ void MainWindow::addMessage(CanFrame *canFrame, bool isIncoming)
     _data = CanHelper::GetSplittedHex(_data);
     _item->setText(_index++, _data);
 
-    ui->messageTreeWidget->addTopLevelItem(_item);
+    treeWidget->addTopLevelItem(_item);
 }
 
-void MainWindow::readReadyCallback(QByteArray data)
+void MainWindow::readReadyCallback(QTreeWidget *treeWidget, QByteArray data)
 {
-    QMessageBox _msgBox;
-    _msgBox.setText(CanHelper::GetSplittedHex(data.toHex().toUpper()));
-    _msgBox.exec();
-
-    CanFrame *_frame;
-    CanFrame::Deserialize(_frame, data); //! \todo The used zero-copy pattern is buggy
-
-    _msgBox.setText(QString::number(_frame->Id()));
-    _msgBox.exec();
-    //addMessage(_frame, true);
-    delete _frame;
-}
-
-void MainWindow::writeDoneCallback(qint64 data)
-{
-    QMessageBox _msgBox;
-    _msgBox.setText(QString::number(data));
-    _msgBox.exec();
+    CanFrame _frame = CanFrame::Deserialize(data);
+    addMessage(treeWidget, &_frame, true);
 }

@@ -4,6 +4,12 @@
 //! \include Serial Port
 #include <QSerialPort>
 
+//! \include Tree Widget
+#include <QTreeWidget>
+
+//! \typedef Read Ready Callback
+typedef void (*ReadReadyCallback)(QTreeWidget*, QByteArray);
+
 class SerialHelper : public QObject
 {
     Q_OBJECT
@@ -11,19 +17,19 @@ class SerialHelper : public QObject
     //! \public
 public:
     explicit SerialHelper(QSerialPort *serialPort,
-            void (*readReadyCallback)(QByteArray),
-            void (*writeDoneCallback)(qint64),
-            QObject *parent = nullptr);
+                          QTreeWidget *treeWidget,
+                          ReadReadyCallback readReadyCallback,
+                          QObject *parent = nullptr);
     bool Write(QByteArray data);
 
 private slots:
     void onReadReady();
-    void onWriteDone(qint64 bytes);
 
     //! \private
 private:
     QSerialPort *serialPort; //!< Serial Port Pointer
-    void (*readReadyCallback)(QByteArray);
+    QTreeWidget* treeWidget;
+    ReadReadyCallback readReadyCallback;
     void (*writeDoneCallback)(qint64);
 };
 

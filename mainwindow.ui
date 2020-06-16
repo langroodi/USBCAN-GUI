@@ -87,7 +87,7 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>461</width>
+       <width>462</width>
        <height>31</height>
       </rect>
      </property>
@@ -402,7 +402,7 @@
         </column>
         <column>
          <property name="text">
-          <string>Type</string>
+          <string>Extended</string>
          </property>
         </column>
         <column>

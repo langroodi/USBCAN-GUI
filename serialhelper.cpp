@@ -1,33 +1,24 @@
 #include "serialhelper.h"
 
-SerialHelper::SerialHelper(
-        QSerialPort *serialPort,
-        void (*readReadyCallback)(QByteArray),
-        void (*writeDoneCallback)(qint64),
-        QObject *parent) :
+SerialHelper::SerialHelper(QSerialPort *serialPort,
+                           QTreeWidget *treeWidget,
+                           ReadReadyCallback readReadyCallback,
+                           QObject *parent) :
     QObject(parent)
 {
+    this->treeWidget = treeWidget;
     this->serialPort = serialPort;
     this->readReadyCallback = readReadyCallback;
-    this->writeDoneCallback = writeDoneCallback;
 
     connect(
                 serialPort, &QSerialPort::readyRead,
                 this, &SerialHelper::onReadReady);
-    connect(
-                serialPort, &QSerialPort::bytesWritten,
-                this, &SerialHelper::onWriteDone);
 } //!< Constructor
 
 void SerialHelper::onReadReady()
 {
     QByteArray _readData = serialPort->readAll();
-    (*readReadyCallback)(_readData);
-}
-
-void SerialHelper::onWriteDone(qint64 bytes)
-{
-    (*writeDoneCallback)(bytes);
+    (*readReadyCallback)(treeWidget, _readData);
 }
 
 bool SerialHelper::Write(QByteArray data)

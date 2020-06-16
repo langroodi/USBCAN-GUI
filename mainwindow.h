@@ -6,6 +6,7 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QMessageBox>
+#include <QTreeWidget>
 #include "canframe.h"
 #include "serialhelper.h"
 
@@ -33,11 +34,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void updateSerialPorts();
-    void addMessage(CanFrame *canFrame, bool isIncoming);
+    static void addMessage(QTreeWidget *treeWidget, CanFrame *canFrame, bool isIncoming);
     QSerialPort serialPort;
     SerialHelper *serialHelper;
-    static void readReadyCallback(QByteArray data);
-    static void writeDoneCallback(qint64 data);
+    static void readReadyCallback(QTreeWidget *treeWidget, QByteArray data);
 };
 
 #endif // MAINWINDOW_H
