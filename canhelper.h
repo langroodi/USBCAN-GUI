@@ -7,6 +7,7 @@
 
 #define PACKET_HEADER_MSB 0xAA
 #define PACKET_HEADER_LSB 0x55
+#define PACKET_RESERVED_ZERO 0x00
 #define PACKET_CRC_OFFSET 2
 #define STANDARD_ID_SIZE 2
 #define EXTENDED_ID_SIZE 4
@@ -17,7 +18,7 @@ public:
     CanHelper();
     static QByteArray HexToArray(QString hexString);
     static QByteArray IdToArray(QString id);
-    static QByteArray IdToArray(unsigned int id, bool isExtended);
+    static QByteArray IdToArray(unsigned int id, bool isExtended, bool bigEndian);
     static unsigned int ArrayToId(const QByteArray idArray, const bool isExtended);
     static QByteArray ArrayToData(const QByteArray array, const bool isExtended);
     static unsigned char GetChecksum(QByteArray array, int offset = 0);

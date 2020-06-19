@@ -21,7 +21,7 @@ QByteArray CanHelper::IdToArray(QString id)
     return _result;
 }
 
-QByteArray CanHelper::IdToArray(unsigned int id, bool isExtended)
+QByteArray CanHelper::IdToArray(unsigned int id, bool isExtended, bool bigEndian)
 {
     QByteArray _result;
 
@@ -37,9 +37,23 @@ QByteArray CanHelper::IdToArray(unsigned int id, bool isExtended)
         _arraySize = STANDARD_ID_SIZE;
     }
 
+    int _offset;
+    int _gain;
+
+    if (bigEndian)
+    {
+        _offset = (_arraySize - 1)* 8;
+        _gain = -1;
+    }
+    else
+    {
+        _offset = 0;
+        _gain = 1;
+    }
+
     for (int i = 0; i < _arraySize; i++)
     {
-        int _pointer = i * 8;
+        int _pointer = _offset + _gain * (i * 8);
         unsigned char _byte = (unsigned char)(id >> _pointer);
         _result.append(_byte);
     }

@@ -291,7 +291,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="constantCheckBox">
         <property name="text">
          <string>20-byte Packet</string>
         </property>

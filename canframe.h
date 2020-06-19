@@ -17,6 +17,16 @@
 #define EXTENDED_MESSAGE_BYTE 0x20
 //! \def Remote Message Byte
 #define REMOTE_MESSAGE_BYTE 0x10
+//! \def Data Type Packet
+#define DATA_TYPE_BYTE 0x01
+//! \def Standard Frame Byte
+#define STANDARD_FRMAE_BYTE 0x01
+//! \def Extended Frame Byte
+#define EXTENDED_FRAME_BYTE 0x02
+//! \def Data Frame Byte
+#define DATA_FRAME_BYTE 0x01
+//! \def Remote Frame Byte
+#define REMOTE_FRAME_BYTE 0x02
 
 //! \class CAN Message Frame
 class CanFrame
@@ -28,6 +38,8 @@ private:
     unsigned char dlc; //!< DLC
     unsigned int id; //!< Message ID
     QByteArray data; //!< Data Frame
+    QByteArray serializeVarLength(); //!< Variable Length Object Serialization
+    QByteArray serializeConstLength(); //!< Constant Length Object Serialization
 
     //! \public
 public:
@@ -41,7 +53,7 @@ public:
     unsigned char Dlc(); //!< Get Data Length Code (DLC)
     unsigned int Id(); //!< Get Message ID
     QByteArray Data(); //!< Get Data Frame
-    QByteArray Serialize(); //!< Serialize the CAN Frame instance
+    QByteArray Serialize(const bool constantLength); //!< Serialize the CAN Frame instance
     static CanFrame Deserialize(QByteArray array /*!< [in] Message Array */); //!< Deserialize message array
 };
 

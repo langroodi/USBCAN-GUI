@@ -38,7 +38,19 @@ QByteArray CanFrame::Data()
     return data;
 } //!< Data Frame
 
-QByteArray CanFrame::Serialize()
+QByteArray CanFrame::Serialize(const bool constantLength)
+{
+    if (constantLength)
+    {
+        return serializeConstLength();
+    }
+    else
+    {
+        return serializeVarLength();
+    }
+}
+
+QByteArray CanFrame::serializeVarLength()
 {
     QByteArray _result;
 
@@ -60,7 +72,7 @@ QByteArray CanFrame::Serialize()
     _result.append(_type);
 
     // ID
-    QByteArray _idArray = CanHelper::IdToArray(id, isExtended);
+    QByteArray _idArray = CanHelper::IdToArray(id, isExtended, false);
     _result.append(_idArray);
 
     // Data
@@ -71,6 +83,56 @@ QByteArray CanFrame::Serialize()
 
     return _result;
 } //!< Serialize the CAN Frame instance
+
+QByteArray CanFrame::serializeConstLength()
+{
+    QByteArray _result;
+
+    // Header
+    _result.append(PACKET_HEADER_MSB);
+    _result.append(PACKET_HEADER_LSB);
+    _result.append(DATA_FRAME_BYTE);
+
+    // Frame Type
+    if (isExtended)
+    {
+        _result.append(EXTENDED_FRAME_BYTE);
+    }
+    else
+    {
+        _result.append(STANDARD_FRMAE_BYTE);
+    }
+
+    // Frame Format
+    if (isRtr)
+    {
+        _result.append(REMOTE_FRAME_BYTE);
+    }
+    else
+    {
+        _result.append(DATA_FRAME_BYTE);
+    }
+
+    // ID
+    QByteArray _idArray = CanHelper::IdToArray(id, isExtended, true);
+    _result.append(_idArray);
+
+    // DLC
+    _result.append(dlc);
+
+    // Data
+    _result.append(data);
+
+    // Trailer
+    unsigned char _trailer = PACKET_RESERVED_ZERO;
+    _result.append(_trailer);
+
+    // CRC
+    unsigned char _crc = CanHelper::GetChecksum(_result, PACKET_CRC_OFFSET);
+    _result.append(_crc);
+
+    return _result;
+}
 
 CanFrame CanFrame::Deserialize(
         QByteArray array /*!< [in] Message Array */)

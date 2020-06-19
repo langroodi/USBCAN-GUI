@@ -49,7 +49,8 @@ void MainWindow::on_sendButton_clicked()
     QByteArray _data = CanHelper::HexToArray(ui->dataTextBox->text());
 
     CanFrame *_frame =  new CanFrame(_isExtended, _isRtr, _id, _data);
-    QByteArray _serializedFrame =_frame->Serialize();
+    QByteArray _serializedFrame =
+            _frame->Serialize(ui->constantCheckBox->isChecked());
 
     serialHelper->Write(_serializedFrame);
 
