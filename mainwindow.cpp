@@ -48,9 +48,9 @@ void MainWindow::on_sendButton_clicked()
     unsigned int _id = ui->idTextBox->text().toUInt(nullptr, 16);
     QByteArray _data = CanHelper::HexToArray(ui->dataTextBox->text());
 
-    CanFrame *_frame =  new CanFrame(_isExtended, _isRtr, _id, _data);
+    CanFrame _frame(_isExtended, _isRtr, _id, _data);
     QByteArray _serializedFrame =
-            _frame->Serialize(ui->constantCheckBox->isChecked());
+            _frame.Serialize(ui->constantCheckBox->isChecked());
 
     serialHelper->Write(_serializedFrame);
 
@@ -110,11 +110,8 @@ void MainWindow::on_startButton_clicked()
     }
 }
 
-void MainWindow::addMessage(
-        QTreeWidget *treeWidget, CanFrame *canFrame, bool isIncoming)
+void MainWindow::addMessage(QTreeWidget *treeWidget, const CanFrame &canFrame, const bool &isIncoming)
 {
-    //! \todo STD Move
-
     QTreeWidgetItem *_item = new QTreeWidgetItem(treeWidget);
     int _index = 0;
 
@@ -127,32 +124,32 @@ void MainWindow::addMessage(
     _item->setText(_index++, _direction);
 
     //! \remark Type
-    QString _type = canFrame->IsExtended() ? "Yes" : "No";
+    QString _type = canFrame.IsExtended() ? "Yes" : "No";
     _item->setText(_index++, _type);
 
     //! \remark ID
-    unsigned int _id = canFrame->Id();
+    unsigned int _id = canFrame.Id();
     QString _idStr = QString::number(_id);
     _item->setText(_index++, _idStr);
 
     //! \remark RTR
-    QString _rtr = canFrame->IsRtr() ? "Yes" : "No";
+    QString _rtr = canFrame.IsRtr() ? "Yes" : "No";
     _item->setText(_index++, _rtr);
 
     //! \remark DLC
-    QString _dlc = QString::number(canFrame->Dlc());
+    QString _dlc = QString::number(canFrame.Dlc());
     _item->setText(_index++, _dlc);
 
     //! \remark Data
-    QString _data = canFrame->Data().toHex().toUpper();
+    QString _data = canFrame.Data().toHex().toUpper();
     _data = CanHelper::GetSplittedHex(_data);
     _item->setText(_index++, _data);
 
     treeWidget->addTopLevelItem(_item);
 }
 
-void MainWindow::readReadyCallback(QTreeWidget *treeWidget, QByteArray data)
+void MainWindow::readReadyCallback(QTreeWidget *treeWidget, const QByteArray &data)
 {
     CanFrame _frame = CanFrame::Deserialize(data);
-    addMessage(treeWidget, &_frame, true);
+    addMessage(treeWidget, _frame, true);
 }

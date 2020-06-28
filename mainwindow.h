@@ -33,11 +33,15 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    void updateSerialPorts();
-    static void addMessage(QTreeWidget *treeWidget, CanFrame *canFrame, bool isIncoming);
-    QSerialPort serialPort;
-    SerialHelper *serialHelper;
-    static void readReadyCallback(QTreeWidget *treeWidget, QByteArray data);
+    void updateSerialPorts(); //!< Update Serial Port List
+    static void addMessage(
+            QTreeWidget *treeWidget /*!< [in] Tree Widget */,
+            const CanFrame &canFrame /*!< [in] CAN Frame Object */,
+            const bool &isIncoming /*!< [in] Is the Message Incoming or Outgoing */); //!< Add a CAN Message to a Tree Widget
+    QSerialPort serialPort; //!< Serial Port Instance
+    SerialHelper *serialHelper; //!< Serial Port Helper
+    static void readReadyCallback(QTreeWidget *treeWidget /*!< [in] Tree Widget */,
+            const QByteArray &data /*!< [in] Recieved Data*/); //!< Read Ready Callback
 };
 
 #endif // MAINWINDOW_H

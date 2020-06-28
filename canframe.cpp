@@ -1,44 +1,53 @@
+/*!
+ *  \brief     CAN Frame Source File
+ *  \author    Armin K. Langroodi
+ *  \version   1.0
+ *  \date      2020
+ *  \copyright GNU Public License.
+ */
+
 //! \include CAN Frame Header
 #include "canframe.h"
 
 CanFrame::CanFrame(
-        const bool isExtended /*!< [in] Is extended or standard */,
-        const bool isRtr /*!< [in] Is RTR or not */,
-        const unsigned int id /*!< [in] Message ID */,
-        const QByteArray data /*!< [in] Data frame */)
+        const bool isExtended,
+        const bool isRtr,
+        const unsigned int id,
+        const QByteArray data)
 {
     this->isExtended = isExtended;
     this->isRtr = isRtr;
     this->id = id;
     this->dlc = (unsigned char)data.count();
     this->data = data;
-} //!< Constructor
+}
 
-bool CanFrame::IsExtended()
+bool CanFrame::IsExtended() const
 {
     return isExtended;
-} //!< Is Extended
-bool CanFrame::IsRtr()
+}
+
+bool CanFrame::IsRtr() const
 {
     return isRtr;
-} //!< Is Remote Transmission Request (RTR)
+}
 
-unsigned int CanFrame::Id()
+unsigned int CanFrame::Id() const
 {
     return id;
-} //!< Message ID
+}
 
-unsigned char CanFrame::Dlc()
+unsigned char CanFrame::Dlc() const
 {
     return dlc;
-} //< Data Length Code (DLC)
+}
 
-QByteArray CanFrame::Data()
+QByteArray CanFrame::Data() const
 {
     return data;
-} //!< Data Frame
+}
 
-QByteArray CanFrame::Serialize(const bool constantLength)
+QByteArray CanFrame::Serialize(const bool &constantLength)
 {
     if (constantLength)
     {
@@ -82,7 +91,7 @@ QByteArray CanFrame::serializeVarLength()
     _result.append(MESSAGE_TRAILER_BYTE);
 
     return _result;
-} //!< Serialize the CAN Frame instance
+}
 
 QByteArray CanFrame::serializeConstLength()
 {
@@ -134,12 +143,11 @@ QByteArray CanFrame::serializeConstLength()
     return _result;
 }
 
-CanFrame CanFrame::Deserialize(
-        QByteArray array /*!< [in] Message Array */)
+CanFrame CanFrame::Deserialize(const QByteArray &array /*!< [in] Message Array */)
 {
-    if ((array[0] == MESSAGE_HEADER_BYTE) &&
-            ((array[1] & MESSAGE_TYPE_BYTE) == MESSAGE_TYPE_BYTE) &&
-            (array[array.count() - 1] == MESSAGE_TRAILER_BYTE))
+    if ((array[MESSAGE_HEADER_OFFSET] == MESSAGE_HEADER_BYTE) &&
+            ((array[MESSAGE_TYPE_OFFSET] & MESSAGE_TYPE_BYTE) == MESSAGE_TYPE_BYTE) &&
+            (array[array.count() - MESSAGE_TRAILER_OFFSET] == MESSAGE_TRAILER_BYTE))
     {
         bool _isExtended =
                 (array[1] & EXTENDED_MESSAGE_BYTE) == EXTENDED_MESSAGE_BYTE;
@@ -151,4 +159,8 @@ CanFrame CanFrame::Deserialize(
         CanFrame _result(_isExtended, _isRtr, _id, _data);
         return _result;
     }
-} //!< Deserialize message array
+    else
+    {
+        throw;
+    }
+}

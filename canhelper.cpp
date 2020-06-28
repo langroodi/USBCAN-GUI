@@ -1,11 +1,15 @@
+/*!
+ *  \brief     CAN Communication Helper Source File
+ *  \author    Armin K. Langroodi
+ *  \version   1.0
+ *  \date      2020
+ *  \copyright GNU Public License.
+ */
+
+//! \include CAN Helper Header File
 #include "canhelper.h"
 
-CanHelper::CanHelper()
-{
-
-}
-
-QByteArray CanHelper::HexToArray(QString hexString)
+QByteArray CanHelper::HexToArray(const QString &hexString)
 {
     QByteArray _hexArray = hexString.toUtf8();
     QByteArray _result = QByteArray::fromHex(_hexArray);
@@ -13,7 +17,7 @@ QByteArray CanHelper::HexToArray(QString hexString)
     return _result;
 }
 
-QByteArray CanHelper::IdToArray(QString id)
+QByteArray CanHelper::IdToArray(const QString &id)
 {
     QByteArray _result = HexToArray(id);
     std::reverse(_result.begin(), _result.end());
@@ -21,11 +25,9 @@ QByteArray CanHelper::IdToArray(QString id)
     return _result;
 }
 
-QByteArray CanHelper::IdToArray(unsigned int id, bool isExtended, bool bigEndian)
+QByteArray CanHelper::IdToArray(const unsigned int &id, const bool &isExtended, const bool &bigEndian)
 {
     QByteArray _result;
-
-    //! \todo std::move
 
     int _arraySize;
     if (isExtended)
@@ -61,8 +63,8 @@ QByteArray CanHelper::IdToArray(unsigned int id, bool isExtended, bool bigEndian
     return _result;
 }
 
-unsigned int CanHelper::ArrayToId(const QByteArray idArray,
-                                  const bool isExtended)
+unsigned int CanHelper::ArrayToId(const QByteArray &idArray,
+                                  const bool &isExtended)
 {
     unsigned int _result = 0;
 
@@ -87,8 +89,8 @@ unsigned int CanHelper::ArrayToId(const QByteArray idArray,
 }
 
 QByteArray CanHelper::ArrayToData(
-        const QByteArray array,
-        const bool isExtended)
+        const QByteArray &array,
+        const bool &isExtended)
 {
     QByteArray _result;
 
@@ -108,7 +110,7 @@ QByteArray CanHelper::ArrayToData(
     return _result;
 }
 
-unsigned char CanHelper::GetChecksum(QByteArray array, int offset)
+unsigned char CanHelper::GetChecksum(QByteArray &array, int offset)
 {
     int sum = 0;
 
@@ -121,12 +123,11 @@ unsigned char CanHelper::GetChecksum(QByteArray array, int offset)
     return _result;
 }
 
-QByteArray CanHelper::GetConfigPacket(
-        unsigned char speed,
-        unsigned char frame,
-        QByteArray filter,
-        QByteArray mask,
-        unsigned char mode)
+QByteArray CanHelper::GetConfigPacket(const unsigned char &speed,
+        const unsigned char &frame,
+        const QByteArray &filter,
+        const QByteArray &mask,
+        const unsigned char &mode)
 {
     QByteArray _result;
 
@@ -162,7 +163,7 @@ QByteArray CanHelper::GetConfigPacket(
     return _result;
 }
 
-QString CanHelper::GetSplittedHex(const QString hexString)
+QString CanHelper::GetSplittedHex(const QString &hexString)
 {
     int _count = hexString.count();
     QString _result = hexString;

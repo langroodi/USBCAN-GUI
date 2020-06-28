@@ -1,9 +1,16 @@
+/*!
+ *  \brief     CAN Frame Header File
+ *  \author    Armin K. Langroodi
+ *  \version   1.0
+ *  \date      2020
+ *  \copyright GNU Public License.
+ */
+
 #ifndef CANFRAME_H
 #define CANFRAME_H
 
 //! \include Qt Byte Array
 #include <QByteArray>
-
 //! \include CAN Helper
 #include "canhelper.h"
 
@@ -27,6 +34,12 @@
 #define DATA_FRAME_BYTE 0x01
 //! \def Remote Frame Byte
 #define REMOTE_FRAME_BYTE 0x02
+//! \def Message Header Offset
+#define MESSAGE_HEADER_OFFSET 0
+//! \def Message Type Offset
+#define MESSAGE_TYPE_OFFSET 1
+//! \def Message Trailer Offset
+#define MESSAGE_TRAILER_OFFSET 1
 
 //! \class CAN Message Frame
 class CanFrame
@@ -48,13 +61,13 @@ public:
             const bool isRtr /*!< [in] Is RTR or not */,
             const unsigned int id /*!< [in] Message ID */,
             const QByteArray data /*!< [in] Data frame */); //!< Constructor
-    bool IsExtended(); //!< Get Is Extended
-    bool IsRtr(); //!< Get Is Remote Transmission Request (RTR)
-    unsigned char Dlc(); //!< Get Data Length Code (DLC)
-    unsigned int Id(); //!< Get Message ID
-    QByteArray Data(); //!< Get Data Frame
-    QByteArray Serialize(const bool constantLength); //!< Serialize the CAN Frame instance
-    static CanFrame Deserialize(QByteArray array /*!< [in] Message Array */); //!< Deserialize message array
+    bool IsExtended() const; //!< Get Is Extended
+    bool IsRtr() const; //!< Get Is Remote Transmission Request (RTR)
+    unsigned char Dlc() const; //!< Get Data Length Code (DLC)
+    unsigned int Id() const; //!< Get Message ID
+    QByteArray Data() const; //!< Get Data Frame
+    QByteArray Serialize(const bool &constantLength); //!< Serialize the CAN Frame instance
+    static CanFrame Deserialize(const QByteArray &array /*!< [in] Message Array */); //!< Deserialize message array
 };
 
 #endif // CANFRAME_H
