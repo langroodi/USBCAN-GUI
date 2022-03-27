@@ -44,7 +44,7 @@ QByteArray CanHelper::IdToArray(const unsigned int &id, const bool &isExtended, 
 
     if (bigEndian)
     {
-        _offset = (_arraySize - 1)* 8;
+        _offset = (_arraySize - 1) * 8;
         _gain = -1;
     }
     else
@@ -67,6 +67,7 @@ unsigned int CanHelper::ArrayToId(const QByteArray &idArray,
                                   const bool &isExtended)
 {
     unsigned int _result = 0;
+    const unsigned int cFirstByteMask = 0xFF;
 
     int _endItr;
     if (isExtended)
@@ -81,7 +82,8 @@ unsigned int CanHelper::ArrayToId(const QByteArray &idArray,
     for (int i = PACKET_CRC_OFFSET; i < _endItr; i++)
     {
         int _pointer = (i - PACKET_CRC_OFFSET) * 8;
-        unsigned int _decimal = (unsigned int)(idArray[i] << _pointer);
+        unsigned int _decimal =
+                (static_cast<unsigned>(idArray[i]) & cFirstByteMask) << _pointer;
         _result |= _decimal;
     }
 
@@ -103,7 +105,8 @@ QByteArray CanHelper::ArrayToData(
     {
         _begin = STANDARD_ID_SIZE + PACKET_CRC_OFFSET;
     }
-    int  _length = array.count() - _begin - 1;
+    // The array ends with one byte trailer that should be dropped.
+    int _length = array.count() - _begin - 1;
 
     _result = array.mid(_begin, _length);
 

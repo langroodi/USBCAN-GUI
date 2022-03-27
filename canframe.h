@@ -56,6 +56,7 @@ private:
 
     //! \public
 public:
+    CanFrame(); //!< Default constructor
     CanFrame(
             const bool isExtended /*!< [in] Is extended or standard */,
             const bool isRtr /*!< [in] Is RTR or not */,
@@ -67,7 +68,9 @@ public:
     unsigned int Id() const; //!< Get Message ID
     QByteArray Data() const; //!< Get Data Frame
     QByteArray Serialize(const bool &constantLength); //!< Serialize the CAN Frame instance
-    static CanFrame Deserialize(const QByteArray &array /*!< [in] Message Array */); //!< Deserialize message array
+    static bool TryDeserialize(
+            const QByteArray &array /*!< [in] Message Array */,
+            CanFrame &frame /*!< [out] Deserialized CAN Frame */); //!< Try to deserialize message array
 };
 
 #endif // CANFRAME_H

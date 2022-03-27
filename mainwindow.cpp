@@ -150,6 +150,11 @@ void MainWindow::addMessage(QTreeWidget *treeWidget, const CanFrame &canFrame, c
 
 void MainWindow::readReadyCallback(QTreeWidget *treeWidget, const QByteArray &data)
 {
-    CanFrame _frame = CanFrame::Deserialize(data);
-    addMessage(treeWidget, _frame, true);
+    CanFrame _frame;
+    bool _succeed = CanFrame::TryDeserialize(data, _frame);
+
+    if (_succeed)
+    {
+        addMessage(treeWidget, _frame, true);
+    }
 }

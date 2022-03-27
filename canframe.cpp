@@ -9,6 +9,15 @@
 //! \include CAN Frame Header
 #include "canframe.h"
 
+CanFrame::CanFrame()
+{
+    isExtended = false;
+    isRtr = false;
+    id = 0;
+    dlc = 0;
+    data = QByteArray();
+}
+
 CanFrame::CanFrame(
         const bool isExtended,
         const bool isRtr,
@@ -143,11 +152,19 @@ QByteArray CanFrame::serializeConstLength()
     return _result;
 }
 
-CanFrame CanFrame::Deserialize(const QByteArray &array /*!< [in] Message Array */)
+bool CanFrame::TryDeserialize(const QByteArray &array,CanFrame &frame)
 {
-    if ((array[MESSAGE_HEADER_OFFSET] == MESSAGE_HEADER_BYTE) &&
-            ((array[MESSAGE_TYPE_OFFSET] & MESSAGE_TYPE_BYTE) == MESSAGE_TYPE_BYTE) &&
-            (array[array.count() - MESSAGE_TRAILER_OFFSET] == MESSAGE_TRAILER_BYTE))
+    const int cMessageHeaderOffset{MESSAGE_HEADER_OFFSET};
+    const int cMessageTypeOffset{MESSAGE_TYPE_OFFSET};
+    const int cMessageTrailerOffset{MESSAGE_TRAILER_OFFSET};
+
+    const char cMessageHeadeByte =MESSAGE_HEADER_BYTE;
+    const char cMessageTypeByte = MESSAGE_TYPE_BYTE;
+    const char cMessageTrailerByte = MESSAGE_TRAILER_BYTE;
+
+    if ((array[cMessageHeaderOffset] == cMessageHeadeByte) &&
+            ((array[cMessageTypeOffset] & cMessageTypeByte) == cMessageTypeByte) &&
+            (array[array.count() - cMessageTrailerOffset] == cMessageTrailerByte))
     {
         bool _isExtended =
                 (array[1] & EXTENDED_MESSAGE_BYTE) == EXTENDED_MESSAGE_BYTE;
@@ -156,11 +173,11 @@ CanFrame CanFrame::Deserialize(const QByteArray &array /*!< [in] Message Array *
         unsigned int _id = CanHelper::ArrayToId(array, _isExtended);
         QByteArray _data =  CanHelper::ArrayToData(array, _isExtended);
 
-        CanFrame _result(_isExtended, _isRtr, _id, _data);
-        return _result;
+        frame = CanFrame(_isExtended, _isRtr, _id, _data);
+        return true;
     }
     else
     {
-        throw;
+        return false;
     }
 }
